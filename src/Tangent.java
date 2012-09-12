@@ -14,7 +14,8 @@ public class Tangent
 	{
 		// TODO Auto-generated method stub
 		//Hello max
-		//Trying my new Hotkey for pushing 
+		//'Sup, Descartes
+		//Trying new hotkeyy
 	}
 	
 }
