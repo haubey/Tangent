@@ -48,23 +48,23 @@ public class AccelerometerTest extends Activity implements SensorEventListener
 	@Override
 	public void onSensorChanged(SensorEvent event)
 	{
-		//Get change in location:
-		float deltaX = locations[0] - event.values[0];
-		float deltaY = locations[1] - event.values[1];
+		//Get change in location (final - initial):
+		float deltaX = event.values[0] - locations[0];
+		float deltaY = event.values[1] - locations[1];
 		
 		//Change initial location to current location:
 		locations[0] = event.values[0];
 		locations[1] = event.values[1];
 		
 		//Update Direction Strings
-		if (deltaX > 2)
+		if (deltaX > 1)
 			directions[0] = "LEFT";
-		else if (deltaX < -2)
+		else if (deltaX < -1)
 			directions[0] = "RIGHT";
 		
-		if (deltaY > 2)
+		if (deltaY > 1)
 			directions[1] = "DOWN";
-		else if (deltaY < -2)
+		else if (deltaY < -1)
 			directions[1] = "UP";
 		
 		builder.setLength(0);
