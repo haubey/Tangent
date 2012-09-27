@@ -15,7 +15,11 @@ import android.widget.TextView;
 
 /**
  * @author descartes.holland
- *
+ * Simple accelerometer-testing activity that prints the direction that the phone's accelerometer is registering.
+ * Note:
+ * Z direction is perpendicular to the screen of the phone no matter the orientation
+ * Y direction is projected out of the top and bottom of the phone, bottom being where the touch-buttons are.
+ * X direction is projected our of the sides of the phone, where your hands are when you hold it normally.
  */
 public class AccelerometerTest extends Activity implements SensorEventListener
 {
@@ -29,8 +33,8 @@ public class AccelerometerTest extends Activity implements SensorEventListener
 	TextView textView;
 	StringBuilder builder = new StringBuilder();
 	
-	float[] locations = new float[2];
-	String[] directions = {"NA", "NA"};
+	float[] locations = new float[3];
+	String[] directions = {"NA", "NA", "NA"};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,28 +55,36 @@ public class AccelerometerTest extends Activity implements SensorEventListener
 		//Get change in location (final - initial):
 		float deltaX = event.values[0] - locations[0];
 		float deltaY = event.values[1] - locations[1];
+		float deltaZ = event.values[2] - locations[2];
 		
 		//Change initial location to current location:
 		locations[0] = event.values[0];
 		locations[1] = event.values[1];
+		locations[2] = event.values[2];
 		
 		//Update Direction Strings
-		if (deltaX > 1)
+		if(deltaX > 0.7)
 			directions[0] = "LEFT";
-		else if (deltaX < -1)
+		else if(deltaX < -0.7)
 			directions[0] = "RIGHT";
 		
-		if (deltaY > 1)
-			directions[1] = "DOWN";
-		else if (deltaY < -1)
-			directions[1] = "UP";
+		if(deltaY > 0.7) 
+			directions[1] = "FORWARD";
+		else if(deltaY < -0.7)
+			directions[1] = "BACKWARD";
+		
+		if(deltaZ > 0.7)
+			directions[2] = "UP";
+		else if(deltaZ < -0.7)
+			directions[2] = "DOWN";
 		
 		builder.setLength(0);
         builder.append("X: ");
         builder.append(directions[0]);
         builder.append(" Y: ");
         builder.append(directions[1]);
-
+        builder.append(" Z: "+directions[2]);
+        
         textView.setText(builder.toString());
 	}
 	
