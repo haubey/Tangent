@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.haubey.tangent;
 
 import android.app.Activity;
@@ -15,30 +12,39 @@ import android.widget.TextView;
 
 /**
  * @author Descartes Holland
+ * 
  * New Activity for testing the orientation sensor, specifically to obtain
  * the angle above the horizontal that the phone is being held at, by using
  * the new (non-deprecated) methods from the Android API.
+ * 
+ * This Activity combines raw data from the magnetometer and accelerometer 
+ * to get orientation data by calculating a 'rotation matrix'.
  */
 public class OrientationTest extends Activity implements SensorEventListener
 {
-	SensorManager manager;
-	Sensor acc;
-	Sensor mag;
+	TextView textView;
+	StringBuilder builder = new StringBuilder();
 	
-	float[] magFieldValues/* = new float[3]*/;		 //Will hold raw data from magnetic field sensor
-	float[] accelerometerValues/* = new float[3]*/;	 //Will hold raw data from accelerometer
-	float[] r = new float[16];		 //Rotation Matrix
-	float[] i = new float[16];
-	float[] orientationValues = new float[3];	 //Holds the computed orientation values (azimuth (yaw), pitch, roll) in rads
+	SensorManager sMgr;
+	Sensor accelerometer;
+	Sensor magField;
+	
+	float[] magFieldData;			//hold raw data from magnetic field sensor
+	float[] accData;				//hold raw data from accelerometer
+	float[] rotMat = new float[16];	//Rotation Matrix
+	float[] orientationValues = new float[3];	 //hold the computed orientation values (azimuth (yaw), pitch, roll) in rads
+	
+	//Exponential Smoothing variables
+	private static float ALPHA;
+	float s;
+	boolean init; //whether an initial guess for s has been obtained
+	
 	
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
-	TextView textView;
-	StringBuilder builder = new StringBuilder();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -47,85 +53,93 @@ public class OrientationTest extends Activity implements SensorEventListener
 		textView = new TextView(this);
 		setContentView(textView);
 		
-		magFieldValues = new float[3];
-		accelerometerValues = new float[3];
+		s = 0;
+		init = false;
+		magFieldData = new float[3];
+		accData = new float[3];
 		
-		manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		acc = (Sensor) manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mag = (Sensor) manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		//Setup:
+		sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		accelerometer = (Sensor) sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		magField = (Sensor) sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
 		//Use Magnetic Field sensor in combination with Accelerometer to determine the Rotation Matrix:
-		manager.registerListener(this, mag, SensorManager.SENSOR_DELAY_GAME);
-		manager.registerListener(this, acc, SensorManager.SENSOR_DELAY_GAME);
-		
-		if(SensorManager.getRotationMatrix(r, i, accelerometerValues, magFieldValues))
-		{ 
-//			builder.append("Got in");
-			SensorManager.getOrientation(r, orientationValues);
-			float yaw = orientationValues[0] * 57.2957795f;
-			builder.setLength(0);
-			builder.append("Azimuth: "+yaw+"\n");
-			textView.setText(builder.toString());
-		}
-		
-		//		manager.getRotationMatrix(rotationMat, null , magFieldValues, accelerometerValues);
-		//		//SensorManager.getRotationMatrix(rotationMat, null, accelerometerValues, magFieldValues); //stores values in rot. mat.
-		//		//SensorManager.getOrientation(rotationMat, orientationValues);		//stores values in orientation array
-		
+		sMgr.registerListener(this, magField, SensorManager.SENSOR_DELAY_NORMAL);
+		sMgr.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	
+	/**
+	 * Takes a sensor event, identifies the type of sensor it came from, and puts
+	 * the raw data into the respective array.
+	 */
 	@Override
 	public void onSensorChanged(SensorEvent event)
 	{ 
 		if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-			System.arraycopy(event.values, 0, accelerometerValues, 0, 3);
+			System.arraycopy(event.values, 0, accData, 0, 3);
 		
 		if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-			System.arraycopy(event.values, 0, magFieldValues, 0, 3);
+			System.arraycopy(event.values, 0, magFieldData, 0, 3);
 		
-		reOrient();
+		reOrient(); //Recalculate orientation
 		
-//		builder.setLength(0);
-//		builder.append("Accel: "+accelerometerValues[0]+" "+accelerometerValues[1]+" "+accelerometerValues[2]+"\n");
-//		builder.append("Mag: "+magFieldValues[0]+" "+magFieldValues[1]+" "+magFieldValues[2]+"\n");
-//		textView.setText(builder.toString());	
+		//printRawSensorData(); //Debugging
 	}
 	
+	/**
+	 * Uses the TextView to display the accelerometer and magnetometer raw data.
+	 */
+	@SuppressWarnings("unused")
+	private void printRawSensorData()
+	{
+		builder.setLength(0);
+		builder.append("Accelerometer: "+accData[0]+" "+accData[1]+" "+accData[2]+"\n");
+		builder.append("Magnetometer: "+magFieldData[0]+" "+magFieldData[1]+" "+magFieldData[2]+"\n");
+		textView.setText(builder.toString());	
+	}
+
 	private void reOrient()
 	{
-		r = new float[16];		 //Rotation Matrix
-		i = new float[16];
+		rotMat = new float[16];		 //Rotation Matrix
 		
-		if(SensorManager.getRotationMatrix(r, i, accelerometerValues, magFieldValues))
+		if(SensorManager.getRotationMatrix(rotMat, null, accData, magFieldData)) //enters only if the rotation matrix was properly created
 		{ 
-			SensorManager.getOrientation(r, orientationValues);
-//			float azi = orientationValues[0] * 57.2957795f;
-			float pitch = orientationValues[1] * 57.2957795f;
-//			float roll = orientationValues[2] * 57.2957795f;
-			builder.setLength(0);
-//			builder.append("Azimuth: "+(azi)+"\n"+" "+(pitch)+"\n "+roll);
-			builder.append("Degrees above horizontal: "+/*pitch+"\n"+*/(Math.round(pitch*100.)/100.));
-			textView.setText(builder.toString());
+			SensorManager.getOrientation(rotMat, orientationValues);
+			
+			//Only interested in pitch (angle above horizontal):
+			float pitch = orientationValues[1];
+			
+			//Exponential smoothing:
+			if(!init)
+			{
+				init = true;
+				s = (float) Math.toDegrees(orientationValues[1]);
+			}
+			s+= (float) (ALPHA*(Math.toDegrees(pitch)-s)); //exp. smoothing by the formula s_t = s_t-1 + alpha * (x_t-1 - s_t-1) | t > 1
+//			float azi = orientationValues[0];
+//			float roll = orientationValues[2];
+//			textView.setText("Azimuth: "+(azi)+"\n"+" "+(pitch)+"\n "+roll);
+			
+			textView.setText("Degrees above horizontal: "+(Math.round(Math.toDegrees(pitch)*100.)/100.)+"\n"+String.valueOf(Math.round(s*100.)/100.));
 		}
 	}
 
 	protected void onPause()
 	{
 		super.onPause();
-		manager.registerListener(this, mag, SensorManager.SENSOR_DELAY_NORMAL);
-		manager.registerListener(this, acc, SensorManager.SENSOR_DELAY_GAME);
+		sMgr.registerListener(this, magField, SensorManager.SENSOR_DELAY_NORMAL);
+		sMgr.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	
 	protected void onResume()
 	{
 		super.onResume();
-		manager.registerListener(this, mag, SensorManager.SENSOR_DELAY_GAME);
-		manager.registerListener(this, acc, SensorManager.SENSOR_DELAY_GAME);
+		sMgr.registerListener(this, magField, SensorManager.SENSOR_DELAY_NORMAL);
+		sMgr.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1)
 	{
-		//Nothing
 	}
 }
