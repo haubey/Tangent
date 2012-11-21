@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.haubey.tangent;
 
 import android.app.Activity;
@@ -78,12 +75,12 @@ public class AccelerometerTest extends Activity implements SensorEventListener
 		else if(deltaZ < -0.7)
 			directions[2] = "DOWN";
 		
-		builder.setLength(0);
+			builder.setLength(0);
         builder.append("X: ");
-        builder.append(directions[0]);
+        builder.append(event.values[0]+"\n");
         builder.append(" Y: ");
-        builder.append(directions[1]);
-        builder.append(" Z: "+directions[2]);
+        builder.append(event.values[0]+"\n");
+        builder.append(" Z: "+event.values[0]);
         
         textView.setText(builder.toString());
 	}
