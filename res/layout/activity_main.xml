@@ -23,4 +23,14 @@
 		android:onClick="onButtonClick"
 	    android:text="Degrees Above Horizontal" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:onClick="goToInput"
+        android:text="Get Some Input!!" />
+
 </RelativeLayout>

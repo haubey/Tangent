@@ -8,7 +8,7 @@ import android.view.View;
 
 public class MainActivity extends Activity {
 	
-//Can also use a ButtonHandler to be responsibel for the button
+//Can also use a ButtonHandler to be responsible for the button
 //	private class ButtonHandler implements View.OnClickListener
 //	{
 //		public void onClick(View v)
@@ -27,13 +27,22 @@ public class MainActivity extends Activity {
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 	}
-	
-	
 	
 	public void onButtonClick(View view)
 	{
 		startActivity(new Intent(this, OrientationTest.class));
+	}
+
+	public void goToInput(View view)
+	{
+		startActivity(new Intent(this, EnterFunction.class));
+	}
+	
+	public void enterFunctionButton(View view)
+	{
+		startActivity(new Intent(this, EnterFunction.class));
 	}
 	
 	@Override
