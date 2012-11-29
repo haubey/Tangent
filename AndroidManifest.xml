@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme" >
         <activity android:name="OrientationTest"></activity>
         <activity android:name="EnterFunction"></activity>
+        <activity android:name="Grapher"></activity>
         <activity
             android:name="MainActivity"
             android:label="@string/title_activity_main" >
