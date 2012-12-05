@@ -11,9 +11,18 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="OrientationTest"></activity>
-        <activity android:name="EnterFunction"></activity>
-        <activity android:name="Grapher"></activity>
+        <activity 
+            android:name="OrientationTest"
+            android:label="@string/title_orentation_test"
+        	></activity>
+        <activity
+            android:name="EnterFunction"
+            android:label="@string/title_enter_function"
+         	></activity>
+        <activity
+            android:name="Grapher"
+            android:label="@string/title_grapher"
+            ></activity>
         <activity
             android:name="MainActivity"
             android:label="@string/title_activity_main" >
