@@ -69,7 +69,7 @@ public void acceptFunction(View view)
 	}
 	
 	if (functionString.contains("e^x")) {
-		functionString = functionString.replace("e^x", "exp(x)");
+		functionString = functionString.replace("e^", "exp(");
 		Toast.makeText(getApplicationContext(), "Replacing e^x", Toast.LENGTH_LONG).show();
 	}
 	
