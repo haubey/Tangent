@@ -22,7 +22,7 @@ public  class EnterFunction extends Fragment {
         		      Context.INPUT_METHOD_SERVICE);
         		imm.hideSoftInputFromWindow(container.getWindowToken(), 0);
         		
-        	return inflater.inflate(R.layout.activity_input2, container, false);
+        	return inflater.inflate(R.layout.custom_function, container, false);
         }
      
 }
