@@ -22,7 +22,7 @@ public class Grapher extends Activity
 		super.onCreate(savedInstanceState);
 		
 		LinearLayout buttonGraph = new LinearLayout(this);
-		buttonGraph.setOrientation(LinearLayout.VERTICAL);
+		buttonGraph.setOrientation(LinearLayout.HORIZONTAL);
 		
 		//Get string extra:
 		Intent intent = getIntent();
@@ -31,9 +31,9 @@ public class Grapher extends Activity
 		//Set up graph:
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); //not sure about this
 		
-		float[] xvalues = new float[10]; //stores x values
-		float[] yvalues = new float[10]; //stores y values
-		int i = 0; //counter for acquiring values
+		float[] xvalues = new float[1000]; //stores x values
+		float[] yvalues = new float[1000]; //stores y values
+		float i = 0; //counter for acquiring values
 		
 //		Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
 //		Toast.makeText(getApplicationContext(), function_string, Toast.LENGTH_SHORT).show();
@@ -44,10 +44,11 @@ public class Grapher extends Activity
 			Calculable function_calc = new ExpressionBuilder(function_string).withVariable("x", i).build();
 			
 			//Fill arrays:
-			for(i = 0; i < yvalues.length; i++)
+			for(int j = 0; j < yvalues.length; j++)
 			{
-				xvalues[i] = i;
-				yvalues[i] = (float) function_calc.calculate(i);
+				xvalues[j] = i;
+				yvalues[j] = (float) function_calc.calculate(i);
+				i+=0.01;
 			}
 
 			plot2d graph = new plot2d(this, xvalues, yvalues, 1);
