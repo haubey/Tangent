@@ -61,21 +61,23 @@ public void acceptFunction(View view)
 {
 	EditText functionTextBox = (EditText) findViewById(R.id.function_textbox);
 	String functionString = functionTextBox.getText().toString();
-	
-	Log.e("ERROR",functionString+"YO");
-	
-	Toast.makeText(getApplicationContext(), "YOYOYOYO", Toast.LENGTH_LONG);
 
 	if (functionString.trim().equals("")) {
 		Toast.makeText(getApplicationContext(), "Please Enter A Function", Toast.LENGTH_LONG).show();
 		return;
 	}
+	
+	if (functionString.contains("e^x")) {
+		functionString = functionString.replace("e^x", "exp(x)");
+		Toast.makeText(getApplicationContext(), "Replacing e^x", Toast.LENGTH_LONG).show();
+	}
+	
 		
 	
 	try {
-		Calculable exp = new ExpressionBuilder(functionTextBox.getText().toString()).withVariable("x", 10).build();
+		Calculable exp = new ExpressionBuilder(functionString).withVariable("x", 10).build();
 		exp.calculate();
-		String function = functionTextBox.getText().toString();
+		String function = functionString;
 		
 		startActivity(new Intent(this, Grapher.class).putExtra("function", function));   
 	}

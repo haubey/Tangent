@@ -27,6 +27,7 @@ public class Grapher extends Activity
 		//Get string extra:
 		Intent intent = getIntent();
 		function_string = new String(intent.getStringExtra("function"));
+		function_string = function_string.replace("e^x", "exp(x)");
 		
 		//Set up graph:
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); //not sure about this
