@@ -10,5 +10,9 @@
     <string name="title_enter_function">Enter Your Function</string>
     <string name="title_grapher">Grapher</string>
     <string name="title_orentation_test">Orientation Test</string>
+    <string name="go_to_graph">Graph It!</string>
+    <string name="title_section1">Functions</string>
+    <string name="title_section2">Custom Funcion</string>
+    <string name="title_section3">High Scores</string>
 
 </resources>

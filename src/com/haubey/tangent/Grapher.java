@@ -9,6 +9,7 @@ import de.congrace.exp4j.UnparsableExpressionException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 
 public class Grapher extends Activity
@@ -28,7 +29,7 @@ public class Grapher extends Activity
 		function_string = new String(intent.getStringExtra("function"));
 		
 		//Set up graph:
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT); //not sure about this
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); //not sure about this
 		
 		float[] xvalues = new float[10]; //stores x values
 		float[] yvalues = new float[10]; //stores y values
@@ -63,11 +64,13 @@ public class Grapher extends Activity
 		{} 
 		
 	}
+	@Override
 	protected void onPause()
 	{
 		super.onPause();
 	}
 	
+	@Override
 	protected void onResume()
 	{
 		super.onResume();

@@ -41,6 +41,7 @@ public class OrientationTest extends Activity implements SensorEventListener
 	boolean init; //whether an initial guess for s has been obtained
 	
 	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -64,8 +65,8 @@ public class OrientationTest extends Activity implements SensorEventListener
 		
 		//Setup:
 		sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		accelerometer = (Sensor) sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		magField = (Sensor) sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		accelerometer = sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		magField = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		
 		//Use Magnetic Field sensor in combination with Accelerometer to determine the Rotation Matrix:
 		sMgr.registerListener(this, magField, SensorManager.SENSOR_DELAY_NORMAL);
@@ -128,6 +129,7 @@ public class OrientationTest extends Activity implements SensorEventListener
 		}
 	}
 
+	@Override
 	protected void onPause()
 	{
 		super.onPause();
@@ -135,6 +137,7 @@ public class OrientationTest extends Activity implements SensorEventListener
 		sMgr.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	
+	@Override
 	protected void onResume()
 	{
 		super.onResume();

@@ -59,12 +59,12 @@ public class plot2d extends View {
 			paint.setTextSize(20.0f);
 			for (int i=1;i<=n;i++){
 				temp = Math.round(10*(minx+(i-1)*(maxx-minx)/n))/10;
-				canvas.drawText(""+temp, (float)toPixelInt(canvasWidth, minx, maxx, temp),canvasHeight-locxAxisInPixels+20, paint);
+				canvas.drawText(""+temp, toPixelInt(canvasWidth, minx, maxx, temp),canvasHeight-locxAxisInPixels+20, paint);
 				temp = Math.round(10*(miny+(i-1)*(maxy-miny)/n))/10;
-				canvas.drawText(""+temp, locyAxisInPixels+20,canvasHeight-(float)toPixelInt(canvasHeight, miny, maxy, temp), paint);
+				canvas.drawText(""+temp, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, temp), paint);
 			}
-			canvas.drawText(""+maxx, (float)toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
-			canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-(float)toPixelInt(canvasHeight, miny, maxy, maxy), paint);
+			canvas.drawText(""+maxx, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
+			canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
 			//canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
 			//canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
 		}

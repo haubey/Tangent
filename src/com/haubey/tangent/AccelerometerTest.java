@@ -21,7 +21,8 @@ import android.widget.TextView;
 public class AccelerometerTest extends Activity implements SensorEventListener
 {
 	
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }

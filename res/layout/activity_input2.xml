@@ -11,8 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="114dp"
         android:ems="10"
-        android:hint="@string/input_funct" />
-
+        android:hint="@string/input_funct" />
     <Button
         android:id="@+id/Done_button"
         android:layout_width="100dp"
