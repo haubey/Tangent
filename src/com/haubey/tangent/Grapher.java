@@ -8,6 +8,7 @@ import de.congrace.exp4j.UnparsableExpressionException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
@@ -23,6 +24,7 @@ public class Grapher extends Activity
 		
 		LinearLayout buttonGraph = new LinearLayout(this);
 		buttonGraph.setOrientation(LinearLayout.HORIZONTAL);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		
 		//Get string extra:
 		Intent intent = getIntent();
