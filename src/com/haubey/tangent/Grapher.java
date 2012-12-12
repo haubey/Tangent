@@ -2,7 +2,9 @@ package com.haubey.tangent;
 
 import com.android.graphbutton.plot2d;
 import de.congrace.exp4j.Calculable;
+import de.congrace.exp4j.CustomFunction;
 import de.congrace.exp4j.ExpressionBuilder;
+import de.congrace.exp4j.InvalidCustomFunctionException;
 import de.congrace.exp4j.UnknownFunctionException;
 import de.congrace.exp4j.UnparsableExpressionException;
 
@@ -38,10 +40,6 @@ public class Grapher extends Activity
 		float[] yvalues = new float[1000]; //stores y values
 		float i = 0; //counter for acquiring values
 		
-//		Toast.makeText(getApplicationContext(), "hi", Toast.LENGTH_SHORT).show();
-//		Toast.makeText(getApplicationContext(), function_string, Toast.LENGTH_SHORT).show();
-
-
 		try {
 			//Set up function as a Calculable:
 			Calculable function_calc = new ExpressionBuilder(function_string).withVariable("x", i).build();
@@ -53,7 +51,7 @@ public class Grapher extends Activity
 				yvalues[j] = (float) function_calc.calculate(i);
 				i+=0.01;
 			}
-
+			
 			plot2d graph = new plot2d(this, xvalues, yvalues, 1);
 			
 			buttonGraph.addView(graph, lp);
@@ -67,7 +65,10 @@ public class Grapher extends Activity
 		catch (UnparsableExpressionException e)
 		{} 
 		
+		
 	}
+	
+	
 	@Override
 	protected void onPause()
 	{
