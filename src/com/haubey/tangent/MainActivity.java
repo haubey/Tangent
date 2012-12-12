@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +60,17 @@ public class MainActivity extends FragmentActivity {
 public void acceptFunction(View view)
 {
 	EditText functionTextBox = (EditText) findViewById(R.id.function_textbox);
+	String functionString = functionTextBox.getText().toString();
+	
+	Log.e("ERROR",functionString+"YO");
+	
+	Toast.makeText(getApplicationContext(), "YOYOYOYO", Toast.LENGTH_LONG);
+
+	if (functionString.trim().equals("")) {
+		Toast.makeText(getApplicationContext(), "Please Enter A Function", Toast.LENGTH_LONG).show();
+		return;
+	}
+		
 	
 	try {
 		Calculable exp = new ExpressionBuilder(functionTextBox.getText().toString()).withVariable("x", 10).build();
