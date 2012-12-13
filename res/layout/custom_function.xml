@@ -3,20 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-
-
-
-
     <EditText
         android:id="@+id/function_textbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:imeOptions="actionDone"
         android:layout_marginTop="114dp"
         android:ems="10"
-        android:hint="@string/input_funct" />
+        android:hint="@string/input_funct"
+        android:imeOptions="actionDone" />
 
     <Button
         android:id="@+id/Done_button"
@@ -25,5 +21,15 @@
         android:layout_centerHorizontal="true"
         android:onClick="acceptFunction"
         android:text="Done" />
+
+        <Button
+            android:id="@+id/carrot"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/button_menu"
+            android:gravity="center"
+            android:text=" " />
 
 </RelativeLayout>

@@ -148,9 +148,6 @@ public class MainActivity extends FragmentActivity {
 		return Arrays.asList(log_b, ln, e);
 	}
 	
-	
-	
-	
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
 	 * sections of the app.
