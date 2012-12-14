@@ -58,7 +58,7 @@ public class MainActivity extends FragmentActivity {
 		
 		
 		//Get the list of custom functions
-		List<CustomFunction> custom_functions = setupCustomFunctions();
+//		List<CustomFunction> custom_functions = setupCustomFunctions();
 		
 	}
 	
@@ -78,13 +78,13 @@ public class MainActivity extends FragmentActivity {
 			return;
 		}
 		
-		//		if (functionString.contains("e^x")) {
-		//			functionString = functionString.replace("e^", "exp(");
-		//			Toast.makeText(getApplicationContext(), "Replacing e^x", Toast.LENGTH_LONG).show();
-		//		}
+				if (functionString.contains("e^x")) {
+					functionString = functionString.replace("e^", "exp(");
+					Toast.makeText(getApplicationContext(), "Replacing e^x", Toast.LENGTH_LONG).show();
+				}
 		
 		try {
-			Calculable exp = new ExpressionBuilder(functionString).withCustomFunctions(custom_functions).withVariable("x", 10).build();
+			Calculable exp = new ExpressionBuilder(functionString).withVariable("x", 10).build();
 			exp.calculate();
 			String function = functionString;
 			
@@ -144,7 +144,7 @@ public class MainActivity extends FragmentActivity {
 		//Form: log(5, 10) is evaluated as: log_5(10)
 		CustomFunction log_b;
 		CustomFunction ln;
-		CustomFunction e;
+//		CustomFunction e;
 		try
 		{
 			log_b = new CustomFunction("log", 2) {
@@ -162,20 +162,20 @@ public class MainActivity extends FragmentActivity {
 			};
 			
 			//Handles "e^"
-			e = new CustomFunction("e^") {
-				public double applyFunction(double... value) {
-					return Math.pow(Math.E, value[0]);
-				}
-			};
+//			e = new CustomFunction("e^") {
+//				public double applyFunction(double... value) {
+//					return Math.pow(Math.E, value[0]);
+//				}
+//			};
 		}
 		catch (InvalidCustomFunctionException e1)
 		{
 			log_b = null;
 			ln = null;
-			e = null;
+//			e = null;
 		} 
 		
-		return Arrays.asList(log_b, ln, e);
+		return Arrays.asList(log_b, ln);
 	}
 	
 	/**
