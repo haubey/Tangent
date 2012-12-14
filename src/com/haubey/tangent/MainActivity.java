@@ -102,7 +102,37 @@ public class MainActivity extends FragmentActivity {
 		
 	} 
 	
+	public void addCarrot(View view)
+	{
+		EditText func = (EditText) findViewById(R.id.function_textbox);
+		int start = func.getSelectionStart();
+		int end = func.getSelectionEnd();
+		func.getText().replace(Math.min(start, end), Math.max(start, end), "^", 0, 1);
+	}
 	
+	public void addlParen(View view)
+	{
+		EditText func = (EditText) findViewById(R.id.function_textbox);
+		int start = func.getSelectionStart();
+		int end = func.getSelectionEnd();
+		func.getText().replace(Math.min(start, end), Math.max(start, end), "(", 0, 1);
+	}
+	
+	public void addrParen(View view)
+	{
+		EditText func = (EditText) findViewById(R.id.function_textbox);
+		int start = func.getSelectionStart();
+		int end = func.getSelectionEnd();
+		func.getText().replace(Math.min(start, end), Math.max(start, end), ")", 0, 1);
+	}
+	
+	public void addX(View view)
+	{
+		EditText func = (EditText) findViewById(R.id.function_textbox);
+		int start = func.getSelectionStart();
+		int end = func.getSelectionEnd();
+		func.getText().replace(Math.min(start, end), Math.max(start, end), "x", 0, 1);
+	}
 	
 	/**
 	 * (Kind of) neatly sets up and returns custom functions
