@@ -16,6 +16,9 @@ public class plot2d extends View {
 	private int vectorLength;
 	private int axes = 1;
 	
+	int circPosX = 0;
+	int circPosY = 0;
+	
 	public plot2d(Context context, float[] xvalues, float[] yvalues, int axes) {
 		super(context);
 		this.xvalues=xvalues;
@@ -68,7 +71,9 @@ public class plot2d extends View {
 			//canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
 			//canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
 		}
-		
+		paint.setColor(Color.GREEN);
+		//0 in the y direction is the bottom of the screen in normal landscape mode.
+		canvas.drawCircle(xvaluesInPixels[400]+circPosX, canvasHeight-yvaluesInPixels[400]-8-circPosY, 8, paint);
 		
 	}
 	
@@ -131,6 +136,14 @@ public class plot2d extends View {
 			if (v[i] < smallest)
 				smallest = v[i];
 		return smallest;
+	}
+
+	public plot2d changeCirc(int i, int j)
+	{
+		circPosX = i;
+		circPosY = j;
+		
+		return this;
 	}
 
 }

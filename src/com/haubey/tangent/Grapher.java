@@ -11,13 +11,16 @@ import de.congrace.exp4j.UnparsableExpressionException;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class Grapher extends Activity
 {
 	String function_string = "";
+	plot2d graphScreen;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,11 +55,12 @@ public class Grapher extends Activity
 				i+=0.01;
 			}
 			
-			plot2d graph = new plot2d(this, xvalues, yvalues, 1);
+			graphScreen = new plot2d(this, xvalues, yvalues, 1);
 			
-			buttonGraph.addView(graph, lp);
-			
+			buttonGraph.addView(graphScreen, 0);
 			setContentView(buttonGraph);
+			
+			new HandleCircle().execute(""); //runs the AsyncTask
 		}
 		
 		//These catch blocks should never be tripped
@@ -79,5 +83,34 @@ public class Grapher extends Activity
 	protected void onResume()
 	{
 		super.onResume();
+	}
+	
+	
+	private class HandleCircle extends AsyncTask<String, Void, String>
+	{
+		
+		protected String doInBackground(String... params)
+		{
+			try {
+				Thread.sleep(3000);
+				graphScreen = graphScreen.changeCirc(30, 30); //this changes the position of the circle
+			}
+			catch (InterruptedException e)
+			{}
+			
+			return "Executed";
+		}      
+		
+		protected void onPostExecute(String result) {
+			graphScreen.invalidate(); //forces graphScreen to re-draw with the new coordinates of the circle
+		}
+		
+		@Override
+		protected void onPreExecute() {
+		}
+		
+		@Override
+		protected void onProgressUpdate(Void... values) {
+		}
 	}
 }
