@@ -88,21 +88,30 @@ public class Grapher extends Activity
 	
 	private class HandleCircle extends AsyncTask<String, Void, String>
 	{
+		//		int numTimesRun = 0;
 		
 		protected String doInBackground(String... params)
 		{
 			try {
-				Thread.sleep(3000);
-				graphScreen = graphScreen.changeCirc(30, 30); //this changes the position of the circle
+				for(int i = 0; i < 3; i++)
+				{
+					Thread.sleep(500);
+					graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
+					graphScreen.postInvalidate();
+				}
 			}
 			catch (InterruptedException e)
 			{}
-			
 			return "Executed";
 		}      
 		
 		protected void onPostExecute(String result) {
-			graphScreen.invalidate(); //forces graphScreen to re-draw with the new coordinates of the circle
+			//			graphScreen.invalidate(); //forces graphScreen to re-draw with the new coordinates of the circle
+			//			while(numTimesRun < 3)
+			//			{
+			//				new HandleCircle().execute("");
+			//				numTimesRun++;
+			//			}
 		}
 		
 		@Override

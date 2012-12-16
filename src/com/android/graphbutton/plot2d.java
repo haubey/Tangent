@@ -138,10 +138,10 @@ public class plot2d extends View {
 		return smallest;
 	}
 
-	public plot2d changeCirc(int i, int j)
+	public plot2d translateCirc(int i, int j)
 	{
-		circPosX = i;
-		circPosY = j;
+		circPosX+= i;
+		circPosY+= j;
 		
 		return this;
 	}
