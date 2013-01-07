@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 
 //This class was implemented by Ankit Srivastava. Please consider acknowledging the author if it ends up being useful to you.
@@ -19,6 +20,11 @@ public class plot2d extends View {
 	int circPosX = 0;
 	int circPosY = 0;
 	
+	float canvasHeight;
+	float canvasWidth;
+	int[] xvaluesInPixels; 
+	int[] yvaluesInPixels;
+	
 	public plot2d(Context context, float[] xvalues, float[] yvalues, int axes) {
 		super(context);
 		this.xvalues=xvalues;
@@ -29,15 +35,21 @@ public class plot2d extends View {
 
 		getAxes(xvalues, yvalues);
 		
+		canvasHeight = getHeight();
+		canvasWidth = getWidth();
+		xvaluesInPixels = toPixel(canvasWidth, minx, maxx, xvalues); 
+		yvaluesInPixels = toPixel(canvasHeight, miny, maxy, yvalues);
+		
+		
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		
-		float canvasHeight = getHeight();
-		float canvasWidth = getWidth();
-		int[] xvaluesInPixels = toPixel(canvasWidth, minx, maxx, xvalues); 
-		int[] yvaluesInPixels = toPixel(canvasHeight, miny, maxy, yvalues);
+		canvasHeight = getHeight();
+		canvasWidth = getWidth();
+		xvaluesInPixels = toPixel(canvasWidth, minx, maxx, xvalues); 
+		yvaluesInPixels = toPixel(canvasHeight, miny, maxy, yvalues);
 		int locxAxisInPixels = toPixelInt(canvasHeight, miny, maxy, locxAxis);
 		int locyAxisInPixels = toPixelInt(canvasWidth, minx, maxx, locyAxis);
 		String xAxis = "x-axis";
@@ -74,7 +86,7 @@ public class plot2d extends View {
 		paint.setColor(Color.GREEN);
 		//0 in the y direction is the bottom of the screen in normal landscape mode.
 
-		canvas.drawCircle(xvaluesInPixels[circPosX], canvasHeight-yvaluesInPixels[circPosY]-8, 8, paint); //moves circle along the graph
+		canvas.drawCircle(xvaluesInPixels[circPosX], canvasHeight-yvaluesInPixels[circPosY], 8, paint); //moves circle along the graph
 
 	}
 	
@@ -152,8 +164,12 @@ public class plot2d extends View {
 	 */
 	public plot2d advanceCirc()
 	{
-		circPosX+= 10;
-		circPosY+= 10;
+		Log.e("TANGENT", Integer.toString(xvaluesInPixels.length));
+		Log.e("TANGENT", Integer.toString(circPosX));
+		if (xvaluesInPixels.length-11 >= circPosX) {
+			circPosX+= 10;
+			circPosY+= 10;
+		}
 		return this;
 	}
 }
