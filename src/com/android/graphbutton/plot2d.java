@@ -73,8 +73,9 @@ public class plot2d extends View {
 		}
 		paint.setColor(Color.GREEN);
 		//0 in the y direction is the bottom of the screen in normal landscape mode.
-		canvas.drawCircle(xvaluesInPixels[400]+circPosX, canvasHeight-yvaluesInPixels[400]-8-circPosY, 8, paint);
-		
+
+		canvas.drawCircle(xvaluesInPixels[circPosX], canvasHeight-yvaluesInPixels[circPosY]-8, 8, paint); //moves circle along the graph
+
 	}
 	
 	private int[] toPixel(float pixels, float min, float max, float[] value) {
@@ -94,7 +95,7 @@ public class plot2d extends View {
 		
 		minx=getMin(xvalues);
 		miny=getMin(yvalues);
-		maxx=getMax(xvalues);
+		maxx = getMax(xvalues);
 		maxy=getMax(yvalues);
 		
 		if (minx>=0)
@@ -142,8 +143,17 @@ public class plot2d extends View {
 	{
 		circPosX+= i;
 		circPosY+= j;
-		
 		return this;
 	}
-
+	
+	/**
+	 * Jumps the circle 10 x-values ahead on its graph.
+	 * @return
+	 */
+	public plot2d advanceCirc()
+	{
+		circPosX+= 10;
+		circPosY+= 10;
+		return this;
+	}
 }

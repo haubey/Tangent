@@ -68,8 +68,6 @@ public class Grapher extends Activity
 		{}
 		catch (UnparsableExpressionException e)
 		{} 
-		
-		
 	}
 	
 	
@@ -88,15 +86,15 @@ public class Grapher extends Activity
 	
 	private class HandleCircle extends AsyncTask<String, Void, String>
 	{
-		//		int numTimesRun = 0;
 		
 		protected String doInBackground(String... params)
 		{
 			try {
-				for(int i = 0; i < 3; i++)
+				for(int i = 0; i < 100; i++) //Moves the dot from the point (0, f(0) to (100, f(100)).
 				{
-					Thread.sleep(500);
-					graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
+					Thread.sleep(100);
+//					graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
+					graphScreen = graphScreen.advanceCirc();
 					graphScreen.postInvalidate();
 				}
 			}
