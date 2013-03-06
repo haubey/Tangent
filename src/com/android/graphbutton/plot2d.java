@@ -10,7 +10,7 @@ import android.view.View;
 //This class was implemented by Ankit Srivastava. Please consider acknowledging the author if it ends up being useful to you.
 
 public class plot2d extends View {
-
+	
 	private Paint paint;
 	private float[] xvalues,yvalues;
 	private float maxx,maxy,minx,miny,locxAxis,locyAxis;
@@ -32,7 +32,7 @@ public class plot2d extends View {
 		this.axes=axes;
 		vectorLength = xvalues.length;
 		paint = new Paint();
-
+		
 		getAxes(xvalues, yvalues);
 		
 		canvasHeight = getHeight();
@@ -40,12 +40,12 @@ public class plot2d extends View {
 		xvaluesInPixels = toPixel(canvasWidth, minx, maxx, xvalues); 
 		yvaluesInPixels = toPixel(canvasHeight, miny, maxy, yvalues);
 		
-		
+		Log.d("G", "Graphscreen constructed");
 	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
-		
+		Log.d("G", "onDraw entered");
 		canvasHeight = getHeight();
 		canvasWidth = getWidth();
 		xvaluesInPixels = toPixel(canvasWidth, minx, maxx, xvalues); 
@@ -54,7 +54,7 @@ public class plot2d extends View {
 		int locyAxisInPixels = toPixelInt(canvasWidth, minx, maxx, locyAxis);
 		String xAxis = "x-axis";
 		String yAxis = "y-axis";
-
+		
 		paint.setStrokeWidth(2);
 		canvas.drawARGB(255, 255, 255, 255);
 		for (int i = 0; i < vectorLength-1; i++) {
@@ -69,7 +69,7 @@ public class plot2d extends View {
 		//Automatic axes markings, modify n to control the number of axes labels
 		if (axes!=0){
 			float temp = 0.0f;
-			int n=3;
+			int n=0; //no axis markings
 			paint.setTextAlign(Paint.Align.CENTER);
 			paint.setTextSize(20.0f);
 			for (int i=1;i<=n;i++){
@@ -78,16 +78,18 @@ public class plot2d extends View {
 				temp = Math.round(10*(miny+(i-1)*(maxy-miny)/n))/10;
 				canvas.drawText(""+temp, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, temp), paint);
 			}
-			canvas.drawText(""+maxx, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
-			canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
+			//Next two lines are min x and max x labels:
+			//			canvas.drawText(""+maxx, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
+			//			canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
+			
 			//canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
 			//canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
 		}
 		paint.setColor(Color.GREEN);
 		//0 in the y direction is the bottom of the screen in normal landscape mode.
-
+		
 		canvas.drawCircle(xvaluesInPixels[circPosX], canvasHeight-yvaluesInPixels[circPosY], 8, paint); //moves circle along the graph
-
+		
 	}
 	
 	private int[] toPixel(float pixels, float min, float max, float[] value) {
@@ -134,7 +136,7 @@ public class plot2d extends View {
 		pint = (int)p;
 		return (pint);
 	}
-
+	
 	private float getMax(float[] v) {
 		float largest = v[0];
 		for (int i = 0; i < v.length; i++)
@@ -142,7 +144,7 @@ public class plot2d extends View {
 				largest = v[i];
 		return largest;
 	}
-
+	
 	private float getMin(float[] v) {
 		float smallest = v[0];
 		for (int i = 0; i < v.length; i++)
@@ -150,7 +152,7 @@ public class plot2d extends View {
 				smallest = v[i];
 		return smallest;
 	}
-
+	
 	public plot2d translateCirc(int i, int j)
 	{
 		circPosX+= i;
@@ -164,9 +166,9 @@ public class plot2d extends View {
 	 */
 	public plot2d advanceCirc()
 	{
-		Log.e("TANGENT", Integer.toString(xvaluesInPixels.length));
-		Log.e("TANGENT", Integer.toString(circPosX));
-		if (xvaluesInPixels.length-11 >= circPosX) {
+		//		Log.d("TANGENT", Integer.toString(xvaluesInPixels.length));
+		//		Log.d("TANGENT", Integer.toString(circPosX));
+		if (xvaluesInPixels.length-10 >= circPosX) {
 			circPosX+= 10;
 			circPosY+= 10;
 		}

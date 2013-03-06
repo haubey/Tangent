@@ -4,6 +4,7 @@ package com.haubey.tangent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ public class PreBuiltFunctionList extends ListFragment {
 	}
 	
 	public void onListItemClick(ListView list, View view, int position, long id) {
+		Log.d("G", "Commencing graphing");
 		getActivity().startActivity(new Intent(getActivity(), Grapher.class).putExtra("function", getListAdapter().getItem(position).toString()));
 	}
 	

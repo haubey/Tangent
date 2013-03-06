@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,6 +57,7 @@ public class MainActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		
+		Log.d("G", "thing");
 		
 		//Get the list of custom functions
 		//		List<CustomFunction> custom_functions = setupCustomFunctions();
@@ -70,6 +72,7 @@ public class MainActivity extends FragmentActivity {
 	
 	public void acceptFunction(View view) throws InvalidCustomFunctionException
 	{
+		Log.d("G", "Accepting function");
 		EditText functionTextBox = (EditText) findViewById(R.id.function_textbox);
 		String functionString = functionTextBox.getText().toString();
 		
@@ -87,7 +90,7 @@ public class MainActivity extends FragmentActivity {
 			Calculable exp = new ExpressionBuilder(functionString).withVariable("x", 10).build();
 			exp.calculate();
 			String function = functionString;
-			
+			Log.d("G", "Commencing Graphing; function: "+function);
 			startActivity(new Intent(this, Grapher.class).putExtra("function", function));   
 		}
 		
