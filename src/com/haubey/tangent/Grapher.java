@@ -9,8 +9,13 @@ import de.congrace.exp4j.UnknownFunctionException;
 import de.congrace.exp4j.UnparsableExpressionException;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,10 +24,25 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Grapher extends Activity
+public class Grapher extends Activity implements SensorEventListener
 {
 	String function_string = "";
 	plot2d graphScreen;
+	
+	SensorManager sMgr;
+	Sensor accelerometer;
+	Sensor magField;
+	
+	float[] magFieldData;			//hold raw data from magnetic field sensor
+	float[] accData;				//hold raw data from accelerometer
+	float[] rotMat = new float[16];	//Rotation Matrix
+	float[] orientationValues = new float[3];	 //hold the computed orientation values (azimuth (yaw), pitch, roll) in rads
+	
+	//Exponential Smoothing variables
+	private static float ALPHA;
+	float s;
+	boolean init; //whether an initial guess for s has been obtained
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +90,16 @@ public class Grapher extends Activity
 			buttonGraph.addView(graphScreen, 0);
 			setContentView(buttonGraph);
 			
+			s = 0;
+			init = false;
+			magFieldData = new float[3];
+			accData = new float[3];
+			
+			//Setup:
+			sMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+			accelerometer = sMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			magField = sMgr.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+			
 			Log.d("G", "Launching background thread");
 			new HandleCircle().execute(""); //runs the AsyncTask
 		}
@@ -81,6 +111,20 @@ public class Grapher extends Activity
 		{} 
 	}
 	
+	private double getDegreesAboveHorizontal()
+	{
+		rotMat = new float[16];		 //Rotation Matrix
+		
+		if(SensorManager.getRotationMatrix(rotMat, null, accData, magFieldData)) //enters only if the rotation matrix was properly created
+		{ 
+			SensorManager.getOrientation(rotMat, orientationValues);
+			
+			//Only interested in pitch (angle above horizontal):
+			float pitch = orientationValues[1];
+			return Math.round(Math.toDegrees(pitch)*100.)/100.;
+		}
+		return 0;
+	}
 	
 	@Override
 	protected void onPause()
@@ -99,14 +143,26 @@ public class Grapher extends Activity
 	{
 		protected String doInBackground(String... params)
 		{
+			sMgr.registerListener(Grapher.this, magField, SensorManager.SENSOR_DELAY_NORMAL);
+			sMgr.registerListener(Grapher.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 			try {
+				boolean advance = true;
 				for(int i = 0; i < 100; i++) //Moves the dot from the point (0, f(0) to (100, f(100)).
 				{
 					Log.d("G", "Inside loop; i="+i);
 					Thread.sleep(100);
-//					graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
-					graphScreen = graphScreen.advanceCirc();
-					graphScreen.postInvalidate();
+					float deg = (float) getDegreesAboveHorizontal();
+					if(Math.abs(-1*Math.sin(deg)*180/Math.PI-deg) <= 10)
+					{
+//											graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
+						graphScreen = graphScreen.advanceCirc();
+						graphScreen = graphScreen.setNextRotation(deg);
+						graphScreen.postInvalidate();
+						advance = true;
+					}
+					else advance = false;
+					if(!advance)
+						i--;
 				}
 			}
 			catch (InterruptedException e){ }
@@ -128,6 +184,49 @@ public class Grapher extends Activity
 		
 		@Override
 		protected void onProgressUpdate(Void... values) {
+		}
+	}
+	
+	
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy)
+	{
+	}
+	
+	
+	@Override
+	public void onSensorChanged(SensorEvent event)
+	{
+		if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+			System.arraycopy(event.values, 0, accData, 0, 3);
+		
+		if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+			System.arraycopy(event.values, 0, magFieldData, 0, 3);
+		
+		reOrient(); //Recalculate orientation
+		
+	}
+	
+	private void reOrient()
+	{
+		rotMat = new float[16];		 //Rotation Matrix
+		
+		if(SensorManager.getRotationMatrix(rotMat, null, accData, magFieldData)) //enters only if the rotation matrix was properly created
+		{ 
+			SensorManager.getOrientation(rotMat, orientationValues);
+			
+			//Only interested in pitch (angle above horizontal):
+			float pitch = orientationValues[1];
+			
+			//Exponential smoothing:
+			if(!init)
+			{
+				init = true;
+				s = (float) Math.toDegrees(orientationValues[1]);
+			}
+			s+= (float) (ALPHA*(Math.toDegrees(pitch)-s)); //exp. smoothing by the formula s_t = s_t-1 + alpha * (x_t-1 - s_t-1) | t > 1
+			//			float azi = orientationValues[0];
+			//			float roll = orientationValues[2];
 		}
 	}
 }

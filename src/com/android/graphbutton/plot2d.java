@@ -19,6 +19,8 @@ public class plot2d extends View {
 	
 	int circPosX = 0;
 	int circPosY = 0;
+	float rotation = 0; //current screen rotation above normal
+	float nextRotation = 0; //next screen rotation above normal.
 	
 	float canvasHeight;
 	float canvasWidth;
@@ -45,6 +47,9 @@ public class plot2d extends View {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
+		canvas.save();
+		canvas.rotate(nextRotation-rotation);
+//		rotation+=10;
 		Log.d("G", "onDraw entered");
 		canvasHeight = getHeight();
 		canvasWidth = getWidth();
@@ -89,7 +94,7 @@ public class plot2d extends View {
 		//0 in the y direction is the bottom of the screen in normal landscape mode.
 		
 		canvas.drawCircle(xvaluesInPixels[circPosX], canvasHeight-yvaluesInPixels[circPosY], 8, paint); //moves circle along the graph
-		
+//		canvas.restore();
 	}
 	
 	private int[] toPixel(float pixels, float min, float max, float[] value) {
@@ -168,10 +173,16 @@ public class plot2d extends View {
 	{
 		//		Log.d("TANGENT", Integer.toString(xvaluesInPixels.length));
 		//		Log.d("TANGENT", Integer.toString(circPosX));
-		if (xvaluesInPixels.length-10 >= circPosX) {
-			circPosX+= 10;
-			circPosY+= 10;
+		if (xvaluesInPixels.length-5 >= circPosX) {
+			circPosX+= 5;
+			circPosY+= 5;
 		}
+		return this;
+	}
+
+	public plot2d setNextRotation(float deg)
+	{
+		nextRotation = deg;
 		return this;
 	}
 }
