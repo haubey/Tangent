@@ -38,6 +38,9 @@ public class Grapher extends Activity implements SensorEventListener
 	float[] rotMat = new float[16];	//Rotation Matrix
 	float[] orientationValues = new float[3];	 //hold the computed orientation values (azimuth (yaw), pitch, roll) in rads
 	
+	float[] xvalues;
+	float[] yvalues;
+	
 	//Exponential Smoothing variables
 	private static float ALPHA;
 	float s;
@@ -60,8 +63,8 @@ public class Grapher extends Activity implements SensorEventListener
 		//Set up graph:
 		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); //not sure about this
 		
-		float[] xvalues = new float[1001]; //stores x values; 1001 is to allow dot to get to end of graph
-		float[] yvalues = new float[1001]; //stores y values
+		xvalues = new float[1001]; //stores x values; 1001 is to allow dot to get to end of graph
+		yvalues = new float[1001]; //stores y values
 		float i = 0; //counter for acquiring values
 		
 		try {
@@ -123,7 +126,7 @@ public class Grapher extends Activity implements SensorEventListener
 			float pitch = orientationValues[1];
 			return Math.round(Math.toDegrees(pitch)*100.)/100.;
 		}
-		return 0;
+		return 90;
 	}
 	
 	@Override
@@ -147,12 +150,12 @@ public class Grapher extends Activity implements SensorEventListener
 			sMgr.registerListener(Grapher.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 			try {
 				boolean advance = true;
-				for(int i = 0; i < 100; i++) //Moves the dot from the point (0, f(0) to (100, f(100)).
+				for(int i = 0; i < 200; i++) //Moves the dot from the point (0, f(0) to (100, f(100)).
 				{
 					Log.d("G", "Inside loop; i="+i);
 					Thread.sleep(100);
 					float deg = (float) getDegreesAboveHorizontal();
-					if(Math.abs(-1*Math.sin(deg)*180/Math.PI-deg) <= 10)
+					if(Math.abs(-1*Math.sin(xvalues[graphScreen.circPosX])*180/Math.PI-deg) <= 5)
 					{
 //											graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
 						graphScreen = graphScreen.advanceCirc();

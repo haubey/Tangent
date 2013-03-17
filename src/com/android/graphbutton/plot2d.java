@@ -17,7 +17,7 @@ public class plot2d extends View {
 	private int vectorLength;
 	private int axes = 1;
 	
-	int circPosX = 0;
+	public int circPosX = 0;
 	int circPosY = 0;
 	float rotation = 0; //current screen rotation above normal
 	float nextRotation = 0; //next screen rotation above normal.
@@ -48,8 +48,9 @@ public class plot2d extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.save();
-		canvas.rotate(nextRotation-rotation);
-//		rotation+=10;
+//		canvas.rotate(nextRotation-rotation, getHeight()/2, getWidth()/2);
+//		canvas.rotate(nextRotation-rotation, xvaluesInPixels[circPosX], yvaluesInPixels[circPosY]);
+
 		Log.d("G", "onDraw entered");
 		canvasHeight = getHeight();
 		canvasWidth = getWidth();
@@ -84,17 +85,18 @@ public class plot2d extends View {
 				canvas.drawText(""+temp, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, temp), paint);
 			}
 			//Next two lines are min x and max x labels:
-			//			canvas.drawText(""+maxx, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
-			//			canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
+			//modified next line to print angle of orientation.
+						canvas.drawText(String.valueOf(nextRotation)/*""+maxx*/, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
+//						canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
 			
-			//canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
-			//canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
+//			canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
+//			canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
 		}
 		paint.setColor(Color.GREEN);
 		//0 in the y direction is the bottom of the screen in normal landscape mode.
 		
 		canvas.drawCircle(xvaluesInPixels[circPosX], canvasHeight-yvaluesInPixels[circPosY], 8, paint); //moves circle along the graph
-//		canvas.restore();
+		canvas.restore();
 	}
 	
 	private int[] toPixel(float pixels, float min, float max, float[] value) {
