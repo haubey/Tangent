@@ -45,7 +45,7 @@ public class Grapher extends Activity implements SensorEventListener
 	private static float ALPHA;
 	float s;
 	boolean init; //whether an initial guess for s has been obtained
-	
+	Calculable function_calc;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class Grapher extends Activity implements SensorEventListener
 		
 		try {
 			//Set up function as a Calculable:
-			Calculable function_calc = new ExpressionBuilder(function_string).withVariable("x", i).build();
+			function_calc = new ExpressionBuilder(function_string).withVariable("x", i).build();
 			
 			//Fill arrays:
 			Log.d("G", "Beginning array calculation");
@@ -129,6 +129,14 @@ public class Grapher extends Activity implements SensorEventListener
 		return 90;
 	}
 	
+	private double getDerivative(int index) {
+		double x1 = xvalues[index];
+		double x2 = xvalues[index+1];
+		
+//		return (function_calc.calculate(x+deltaH) - function_calc.calculate(x-deltaH)) / 2*deltaH;
+		return ((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1));
+	}
+	
 	@Override
 	protected void onPause()
 	{
@@ -155,7 +163,10 @@ public class Grapher extends Activity implements SensorEventListener
 					Log.d("G", "Inside loop; i="+i);
 					Thread.sleep(100);
 					float deg = (float) getDegreesAboveHorizontal();
-					if(Math.abs(-1*Math.sin(xvalues[graphScreen.circPosX])*180/Math.PI-deg) <= 5)
+					if(
+							Math.abs(Math.toDegrees(Math.atan(getDerivative(graphScreen.circPosX)))-deg) <= 5
+						)
+//					if(Math.abs(-1*Math.sin(xvalues[graphScreen.circPosX])*180/Math.PI-deg) <= 5)
 					{
 //											graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
 						graphScreen = graphScreen.advanceCirc();
