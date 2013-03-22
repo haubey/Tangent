@@ -51,7 +51,7 @@ public class plot2d extends View {
 //		canvas.rotate(nextRotation-rotation, getHeight()/2, getWidth()/2);
 //		canvas.rotate(nextRotation-rotation, xvaluesInPixels[circPosX], yvaluesInPixels[circPosY]);
 
-		Log.d("G", "onDraw entered");
+//		Log.d("G", "onDraw entered");
 		canvasHeight = getHeight();
 		canvasWidth = getWidth();
 		xvaluesInPixels = toPixel(canvasWidth, minx, maxx, xvalues); 

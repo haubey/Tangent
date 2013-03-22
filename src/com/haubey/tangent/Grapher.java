@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 public class Grapher extends Activity implements SensorEventListener
 {
+	int DEGREE_TOLERANCE = 10; //number of degrees difference acceptable
+	
 	String function_string = "";
 	plot2d graphScreen;
 	
@@ -124,8 +126,10 @@ public class Grapher extends Activity implements SensorEventListener
 			
 			//Only interested in pitch (angle above horizontal):
 			float pitch = orientationValues[1];
+			Log.d("G", "Degrees: "+String.valueOf(Math.round(Math.toDegrees(pitch)*100.)/100.));
 			return Math.round(Math.toDegrees(pitch)*100.)/100.;
 		}
+		Log.d("G", "returned 90");
 		return 90;
 	}
 	
@@ -134,6 +138,7 @@ public class Grapher extends Activity implements SensorEventListener
 		double x2 = xvalues[index+1];
 		
 //		return (function_calc.calculate(x+deltaH) - function_calc.calculate(x-deltaH)) / 2*deltaH;
+		Log.d("G", "Deriv: "+String.valueOf((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1)));
 		return ((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1));
 	}
 	
@@ -160,11 +165,11 @@ public class Grapher extends Activity implements SensorEventListener
 				boolean advance = true;
 				for(int i = 0; i < 200; i++) //Moves the dot from the point (0, f(0) to (100, f(100)).
 				{
-					Log.d("G", "Inside loop; i="+i);
+//					Log.d("G", "Inside loop; i="+i);
 					Thread.sleep(100);
 					float deg = (float) getDegreesAboveHorizontal();
 					if(
-							Math.abs(Math.toDegrees(Math.atan(getDerivative(graphScreen.circPosX)))-deg) <= 5
+							Math.abs(Math.toDegrees(Math.atan(getDerivative(graphScreen.circPosX)))-deg) <= DEGREE_TOLERANCE
 						)
 //					if(Math.abs(-1*Math.sin(xvalues[graphScreen.circPosX])*180/Math.PI-deg) <= 5)
 					{
