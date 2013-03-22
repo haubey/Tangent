@@ -48,8 +48,6 @@ public class plot2d extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.save();
-//		canvas.rotate(nextRotation-rotation, getHeight()/2, getWidth()/2);
-//		canvas.rotate(nextRotation-rotation, xvaluesInPixels[circPosX], yvaluesInPixels[circPosY]);
 
 //		Log.d("G", "onDraw entered");
 		canvasHeight = getHeight();
@@ -160,21 +158,12 @@ public class plot2d extends View {
 		return smallest;
 	}
 	
-	public plot2d translateCirc(int i, int j)
-	{
-		circPosX+= i;
-		circPosY+= j;
-		return this;
-	}
-	
 	/**
-	 * Jumps the circle 10 x-values ahead on its graph.
+	 * Jumps the circle 5 x-values ahead on its graph.
 	 * @return
 	 */
 	public plot2d advanceCirc()
 	{
-		//		Log.d("TANGENT", Integer.toString(xvaluesInPixels.length));
-		//		Log.d("TANGENT", Integer.toString(circPosX));
 		if (xvaluesInPixels.length-5 >= circPosX) {
 			circPosX+= 5;
 			circPosY+= 5;

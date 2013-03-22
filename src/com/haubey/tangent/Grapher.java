@@ -35,6 +35,8 @@ public class Grapher extends Activity implements SensorEventListener
 	Sensor accelerometer;
 	Sensor magField;
 	
+	int xValueCounter = 0;
+	
 	float[] magFieldData;			//hold raw data from magnetic field sensor
 	float[] accData;				//hold raw data from accelerometer
 	float[] rotMat = new float[16];	//Rotation Matrix
@@ -136,10 +138,13 @@ public class Grapher extends Activity implements SensorEventListener
 	private double getDerivative(int index) {
 		double x1 = xvalues[index];
 		double x2 = xvalues[index+1];
+	
+		double der =  ((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1));
 		
-//		return (function_calc.calculate(x+deltaH) - function_calc.calculate(x-deltaH)) / 2*deltaH;
-		Log.d("G", "Deriv: "+String.valueOf((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1)));
-		return ((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1));
+		Log.d("Derivative at " + index, String.valueOf(der));
+		
+		return der;
+		
 	}
 	
 	@Override
@@ -165,19 +170,17 @@ public class Grapher extends Activity implements SensorEventListener
 				boolean advance = true;
 				for(int i = 0; i < 200; i++) //Moves the dot from the point (0, f(0) to (100, f(100)).
 				{
-//					Log.d("G", "Inside loop; i="+i);
 					Thread.sleep(100);
 					float deg = (float) getDegreesAboveHorizontal();
 					if(
-							Math.abs(Math.toDegrees(Math.atan(getDerivative(graphScreen.circPosX)))-deg) <= DEGREE_TOLERANCE
+							Math.abs(Math.toDegrees(Math.atan(getDerivative(xValueCounter)))-deg) <= DEGREE_TOLERANCE
 						)
-//					if(Math.abs(-1*Math.sin(xvalues[graphScreen.circPosX])*180/Math.PI-deg) <= 5)
 					{
-//											graphScreen = graphScreen.translateCirc(30, 30); //this changes the position of the circle
 						graphScreen = graphScreen.advanceCirc();
 						graphScreen = graphScreen.setNextRotation(deg);
 						graphScreen.postInvalidate();
 						advance = true;
+						xValueCounter++;
 					}
 					else advance = false;
 					if(!advance)
@@ -189,12 +192,12 @@ public class Grapher extends Activity implements SensorEventListener
 		}      
 		
 		protected void onPostExecute(String result) {
-			//			graphScreen.invalidate(); //forces graphScreen to re-draw with the new coordinates of the circle
-			//			while(numTimesRun < 3)
-			//			{
-			//				new HandleCircle().execute("");
-			//				numTimesRun++;
-			//			}
+//						graphScreen.invalidate(); //forces graphScreen to re-draw with the new coordinates of the circle
+//						while(numTimesRun < 3)
+//						{
+//							new HandleCircle().execute("");
+//							numTimesRun++;
+//						}
 		}
 		
 		@Override
@@ -244,8 +247,6 @@ public class Grapher extends Activity implements SensorEventListener
 				s = (float) Math.toDegrees(orientationValues[1]);
 			}
 			s+= (float) (ALPHA*(Math.toDegrees(pitch)-s)); //exp. smoothing by the formula s_t = s_t-1 + alpha * (x_t-1 - s_t-1) | t > 1
-			//			float azi = orientationValues[0];
-			//			float roll = orientationValues[2];
 		}
 	}
 }

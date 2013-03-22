@@ -147,7 +147,6 @@ public class MainActivity extends FragmentActivity {
 		//Form: log(5, 10) is evaluated as: log_5(10)
 		CustomFunction log_b;
 		CustomFunction ln;
-		//		CustomFunction e;
 		try
 		{
 			log_b = new CustomFunction("log", 2) {
@@ -163,19 +162,11 @@ public class MainActivity extends FragmentActivity {
 					return Math.log(value[0]);
 				}
 			};
-			
-			//Handles "e^"
-			//			e = new CustomFunction("e^") {
-			//				public double applyFunction(double... value) {
-			//					return Math.pow(Math.E, value[0]);
-			//				}
-			//			};
 		}
 		catch (InvalidCustomFunctionException e1)
 		{
 			log_b = null;
 			ln = null;
-			//			e = null;
 		} 
 		
 		return Arrays.asList(log_b, ln);
