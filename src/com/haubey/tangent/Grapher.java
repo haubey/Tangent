@@ -141,7 +141,7 @@ public class Grapher extends Activity implements SensorEventListener
 	
 		double der =  ((function_calc.calculate(x2) - function_calc.calculate(x1)) / (x2-x1));
 		
-		Log.d("Derivative at " + index, String.valueOf(der));
+		Log.d("Derivative at " + xvalues[index], String.valueOf(der));
 		
 		return der;
 		
@@ -176,6 +176,9 @@ public class Grapher extends Activity implements SensorEventListener
 							Math.abs(Math.toDegrees(Math.atan(getDerivative(xValueCounter)))-deg) <= DEGREE_TOLERANCE
 						)
 					{
+						graphScreen.xvalue = xvalues[xValueCounter];
+						graphScreen.yvalue = function_calc.calculate(xvalues[xValueCounter]);
+						graphScreen.derivative = getDerivative(xValueCounter);
 						graphScreen = graphScreen.advanceCirc();
 						graphScreen = graphScreen.setNextRotation(deg);
 						graphScreen.postInvalidate();

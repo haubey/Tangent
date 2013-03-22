@@ -17,6 +17,10 @@ public class plot2d extends View {
 	private int vectorLength;
 	private int axes = 1;
 	
+	public double xvalue;
+	public double yvalue;
+	public double derivative;
+	
 	public int circPosX = 0;
 	int circPosY = 0;
 	float rotation = 0; //current screen rotation above normal
@@ -66,6 +70,11 @@ public class plot2d extends View {
 			canvas.drawLine(xvaluesInPixels[i],canvasHeight-yvaluesInPixels[i],xvaluesInPixels[i+1],canvasHeight-yvaluesInPixels[i+1],paint);
 		}
 		
+		paint.setColor(Color.BLUE);
+		canvas.drawLine(xvaluesInPixels[0], canvasHeight - yvaluesInPixels[0], (float) xvaluesInPixels[vectorLength-1], (float) ((float) canvasHeight - (vectorLength*derivative)), paint);
+		
+		
+		
 		paint.setColor(Color.BLACK);
 		canvas.drawLine(0,canvasHeight-locxAxisInPixels,canvasWidth,canvasHeight-locxAxisInPixels,paint);
 		canvas.drawLine(locyAxisInPixels,0,locyAxisInPixels,canvasHeight,paint);
@@ -84,11 +93,11 @@ public class plot2d extends View {
 			}
 			//Next two lines are min x and max x labels:
 			//modified next line to print angle of orientation.
-						canvas.drawText(String.valueOf(nextRotation)/*""+maxx*/, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
-//						canvas.drawText(""+maxy, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
+						canvas.drawText(""+xvalue, toPixelInt(canvasWidth, minx, maxx, maxx),canvasHeight-locxAxisInPixels+20, paint);
+						canvas.drawText(""+yvalue, locyAxisInPixels+20,canvasHeight-toPixelInt(canvasHeight, miny, maxy, maxy), paint);
 			
-//			canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
-//			canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
+			canvas.drawText(xAxis, canvasWidth/2,canvasHeight-locxAxisInPixels+45, paint);
+			canvas.drawText(yAxis, locyAxisInPixels-40,canvasHeight/2, paint);
 		}
 		paint.setColor(Color.GREEN);
 		//0 in the y direction is the bottom of the screen in normal landscape mode.
